@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Posts {
+public class Posts extends DefaultTime{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,12 +29,5 @@ public class Posts {
     public void postsModified(String title, String content) {
         this.title = title;
         this.content = content;
-    }
-
-    public Posts(String title, String content, String username, int view) {
-        this.title = title;
-        this.content = content;
-        this.username = username;
-        this.view = view;
     }
 }

@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Users {
+public class Users extends DefaultTime{
 
     @Id @GeneratedValue
     private Long id;
