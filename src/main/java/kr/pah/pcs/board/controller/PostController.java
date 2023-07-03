@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,8 +28,13 @@ public class PostController {
     @Autowired
     PostsQuerydslRepository postsQuerydslRepository;
 
-    @GetMapping("/post")
+    @GetMapping("/posts")
     public List<PostsDto> getPosts(@PageableDefault Pageable pageable) {
         return postsQuerydslRepository.findAll(pageable);
+    }
+
+    @GetMapping("/post/{id}")
+    public String Post(@PathVariable("id") Long id) {
+        return null;
     }
 }
