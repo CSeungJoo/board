@@ -3,15 +3,15 @@ package kr.pah.pcs.board.repository;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import kr.pah.pcs.board.dto.PostDto;
-import kr.pah.pcs.board.dto.PostsDto;
-import kr.pah.pcs.board.dto.QPostDto;
-import kr.pah.pcs.board.dto.QPostsDto;
+import kr.pah.pcs.board.dto.*;
+import kr.pah.pcs.board.exception.CustomException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static kr.pah.pcs.board.domain.QPosts.posts;
 import static kr.pah.pcs.board.domain.QUsers.*;
@@ -32,13 +32,14 @@ public class PostsQuerydslRepository {
      * DTO를 통하여 조회하기
      * @return
      */
-    public List<PostsDto> findAll() {
+    public List<PostsDto> findAll() throws IOException {
         return queryFactory
                 .select(new QPostsDto(
                         posts.id.as("posts_id"),
                         posts.title,
                         users.username,
-                        posts.view
+                        posts.view,
+                        posts.createdDate
                 ))
                 .from(posts)
                 .join(posts.users, users)
@@ -56,7 +57,8 @@ public class PostsQuerydslRepository {
                         posts.id.as("posts_id"),
                         posts.title,
                         users.username,
-                        posts.view
+                        posts.view,
+                        posts.createdDate
                 ))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

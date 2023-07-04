@@ -17,12 +17,14 @@ public class PostsDto {
     private String title;
     private String username;
     private int view;
+    private String createdDate;
 
     @QueryProjection
-    public PostsDto(Long id, String title, String username, int view) {
+    public PostsDto(Long id, String title, String username, int view, String createdDate) {
         this.id = id;
         this.title = title;
         this.username = username;
         this.view = view;
+        this.createdDate = createdDate;
     }
 }

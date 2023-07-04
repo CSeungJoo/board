@@ -26,6 +26,9 @@ public class Users extends DefaultTime{
     @OneToMany(mappedBy = "users")
     private List<Posts> posts;
 
+    @OneToMany(mappedBy = "users")
+    private List<Comment> comments;
+
     public void changeName(String username) {
         this.username = username;
     }
