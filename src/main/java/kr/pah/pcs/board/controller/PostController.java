@@ -2,18 +2,16 @@ package kr.pah.pcs.board.controller;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import kr.pah.pcs.board.domain.Posts;
 import kr.pah.pcs.board.dto.PostDto;
 import kr.pah.pcs.board.dto.PostsDto;
+import kr.pah.pcs.board.exception.CustomException;
+import kr.pah.pcs.board.exception.ErrorCode;
 import kr.pah.pcs.board.repository.PostsQuerydslRepository;
 import kr.pah.pcs.board.repository.PostsRepository;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,13 +27,23 @@ public class PostController {
     @Autowired
     PostsQuerydslRepository postsQuerydslRepository;
 
+//    게시글 페이징 조회
     @GetMapping("/posts")
     public List<PostsDto> getPosts(@PageableDefault Pageable pageable) {
         return postsQuerydslRepository.findAll(pageable);
     }
 
+//    게시글 보기
     @GetMapping("/post/{id}")
-    public PostDto Post(@PathVariable("id") Long id) {
-        return postsQuerydslRepository.findPostById(id);
+    public PostDto post(@PathVariable("id") Long id) {
+        PostDto result = postsQuerydslRepository.findPostById(id);
+        if(result == null) throw new CustomException(ErrorCode.POST_NOT_FOUND);
+        result.setView(result.getView() + 1);
+        return result;
+    }
+
+    @PostMapping("/post/write")
+    public void write(@RequestBody PostDto requestData) {
+
     }
 }

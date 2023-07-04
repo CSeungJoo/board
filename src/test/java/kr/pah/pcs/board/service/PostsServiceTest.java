@@ -1,43 +1,34 @@
-package kr.pah.pcs.board.repository;
+package kr.pah.pcs.board.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import kr.pah.pcs.board.domain.Posts;
 import kr.pah.pcs.board.domain.Role;
 import kr.pah.pcs.board.domain.Users;
-import kr.pah.pcs.board.dto.PostDto;
-import kr.pah.pcs.board.dto.PostsDto;
-import org.apache.catalina.User;
-import org.aspectj.lang.annotation.Before;
-import org.assertj.core.api.Assertions;
+import kr.pah.pcs.board.dto.CreatePostDto;
+import kr.pah.pcs.board.exception.CustomException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
-class PostsQuerydslRepositoryTest {
+class PostsServiceTest {
 
     @PersistenceContext
     EntityManager em;
 
     @Autowired
-    PostsRepository postsRepository;
-
-    @Autowired
-    PostsQuerydslRepository postsQuerydslRepository;
+    PostsService postsService;
 
     @BeforeEach
     public void before() {
@@ -72,28 +63,19 @@ class PostsQuerydslRepositoryTest {
     }
 
     @Test
-    public void getPosts() throws Exception {
-        List<PostsDto> result = postsQuerydslRepository.findAll();
-
-        assertThat(result.size()).isEqualTo(11);
+    public void creatPost() throws Exception {
+        Users user1 = new Users(1L, "name", "mail", Role.USER);
+        CreatePostDto data = new CreatePostDto("title", "content", user1);
+        String s = postsService.writePost(data);
+        assertThat(s).isEqualTo("ok");
     }
-    
+
     @Test
-    public void getPostsByPaging() throws Exception {
-        PageRequest pageable = PageRequest.of(0, 10);
-        List<PostsDto> result = postsQuerydslRepository.findAll(pageable);
-
-        for (PostsDto postsDto : result) {
-            System.out.println("postsDto = " + postsDto.getTitle());
-        }
+    public void creatPostException () throws Exception {
+        Users user1 = new Users(null, "name", "mail", Role.USER);
+        CreatePostDto data = new CreatePostDto("title", "content", user1);
+        assertThatThrownBy(() -> postsService.writePost(data))
+                .isInstanceOf(CustomException.class);
     }
-    
-    @Test
-    public void findPostByIdTest() throws Exception {
-        postsQuerydslRepository.findAll();
 
-        PostDto result = postsQuerydslRepository.findPostById(1L);
-
-        assertThat(result.getTitle()).isEqualTo("1");
-    }
 }

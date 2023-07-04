@@ -29,6 +29,9 @@ public class Posts extends DefaultTime{
     @Column(nullable = false)
     private int view;
 
+    @OneToMany(mappedBy = "posts")
+    private List<Comment> comment;
+
     public void postsModified(String title, String content) {
         this.title = title;
         this.content = content;
@@ -39,5 +42,11 @@ public class Posts extends DefaultTime{
         this.content = content;
         this.users = users;
         this.view = view;
+    }
+
+    public Posts(String title, String content, Users users) {
+        this.title = title;
+        this.content = content;
+        this.users = users;
     }
 }
