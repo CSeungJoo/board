@@ -3,6 +3,7 @@ package kr.pah.pcs.board.controller;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import kr.pah.pcs.board.domain.Posts;
+import kr.pah.pcs.board.dto.PostDto;
 import kr.pah.pcs.board.dto.PostsDto;
 import kr.pah.pcs.board.repository.PostsQuerydslRepository;
 import kr.pah.pcs.board.repository.PostsRepository;
@@ -34,7 +35,7 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public String Post(@PathVariable("id") Long id) {
-        return null;
+    public PostDto Post(@PathVariable("id") Long id) {
+        return postsQuerydslRepository.findPostById(id);
     }
 }
