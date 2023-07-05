@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import kr.pah.pcs.board.domain.Posts;
 import kr.pah.pcs.board.dto.CreatePostDto;
 import kr.pah.pcs.board.dto.PostDto;
+import kr.pah.pcs.board.dto.PostsDto;
 import kr.pah.pcs.board.exception.CustomException;
 import kr.pah.pcs.board.exception.ErrorCode;
 import kr.pah.pcs.board.repository.PostsQuerydslRepository;
@@ -26,6 +27,18 @@ public class PostsService {
         if (data.getContent().isBlank() || data.getTitle().isBlank() || data.getUsers().getUsername().isBlank() || data.getUsers().getId() == null) throw new CustomException(ErrorCode.INVALID_POST_DATA);
         Posts post = new Posts(data.getTitle(), data.getContent(), data.getUsers());
         postsRepository.save(post);
+        return "ok";
+    }
+
+    public PostDto findPostById(Long id) {
+        PostDto result = postsQuerydslRepository.findPostById(id);
+        if(result == null) throw new CustomException(ErrorCode.POST_NOT_FOUND);
+        result.setView(result.getView() + 1);
+        return result;
+    }
+
+    public String deletePost(Long id) {
+        postsRepository.deleteById(id);
         return "ok";
     }
 }
