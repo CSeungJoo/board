@@ -46,7 +46,12 @@ public class PostController {
     }
 
     @PostMapping("/post/write")
-    public String write(@RequestBody CreatePostDto requestData) {
+    public String writePost(@RequestBody CreatePostDto requestData) {
         return postsService.writePost(requestData);
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deletePost(@PathVariable("id") Long id) {
+        return postsService.deletePost(id);
     }
 }
