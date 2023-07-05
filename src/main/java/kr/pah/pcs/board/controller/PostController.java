@@ -26,9 +26,7 @@ public class PostController {
 
     private final PostsRepository postsRepository;
     private final PostsService postsService;
-
-    @Autowired
-    PostsQuerydslRepository postsQuerydslRepository;
+    private final PostsQuerydslRepository postsQuerydslRepository;
 
 //    게시글 페이징 조회
     @GetMapping("/posts")
@@ -39,9 +37,7 @@ public class PostController {
 //    게시글 보기
     @GetMapping("/post/{id}")
     public PostDto post(@PathVariable("id") Long id) {
-        PostDto result = postsQuerydslRepository.findPostById(id);
-        if(result == null) throw new CustomException(ErrorCode.POST_NOT_FOUND);
-        result.setView(result.getView() + 1);
+        PostDto result = postsService.findPostById(id);
         return result;
     }
 

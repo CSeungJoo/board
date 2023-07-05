@@ -7,6 +7,8 @@ import kr.pah.pcs.board.domain.Role;
 import kr.pah.pcs.board.domain.Users;
 import kr.pah.pcs.board.dto.CreatePostDto;
 import kr.pah.pcs.board.exception.CustomException;
+import kr.pah.pcs.board.repository.PostsQuerydslRepository;
+import kr.pah.pcs.board.repository.PostsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +33,11 @@ class PostsServiceTest {
 
     @Autowired
     PostsService postsService;
+
+    @Autowired
+    PostsQuerydslRepository postsQuerydslRepository;
+    @Autowired
+    PostsRepository postsRepository;
 
     @BeforeEach
     public void before() {
@@ -77,5 +86,13 @@ class PostsServiceTest {
         assertThatThrownBy(() -> postsService.writePost(data))
                 .isInstanceOf(CustomException.class);
     }
+
+    @Test
+    public void deletePost() throws Exception {
+        postsService.deletePost(1L);
+
+        assertThatThrownBy(() -> postsService.findPostById(1L))
+                .isInstanceOf(CustomException.class);
+     }
 
 }
