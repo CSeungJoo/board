@@ -2,7 +2,9 @@ package kr.pah.pcs.board.service;
 
 import jakarta.persistence.EntityManager;
 import kr.pah.pcs.board.domain.Posts;
+import kr.pah.pcs.board.domain.Users;
 import kr.pah.pcs.board.dto.CreatePostDto;
+import kr.pah.pcs.board.dto.DeleteDto;
 import kr.pah.pcs.board.dto.PostDto;
 import kr.pah.pcs.board.dto.PostsDto;
 import kr.pah.pcs.board.exception.CustomException;
@@ -12,6 +14,8 @@ import kr.pah.pcs.board.repository.PostsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -37,8 +41,10 @@ public class PostsService {
         return result;
     }
 
-    public String deletePost(Long id) {
-        postsRepository.deleteById(id);
+    public String deletePost(DeleteDto deleteDto) {
+        if (deleteDto.getUsers().equals(postsRepository.findById(deleteDto.getUsers().getId())))
+        postsRepository.deleteById(deleteDto.getId());
+        else throw new CustomException(ErrorCode.INVALID_DELETE_REQUEST);
         return "ok";
     }
 }

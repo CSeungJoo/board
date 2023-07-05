@@ -6,9 +6,12 @@ import kr.pah.pcs.board.domain.Posts;
 import kr.pah.pcs.board.domain.Role;
 import kr.pah.pcs.board.domain.Users;
 import kr.pah.pcs.board.dto.CreatePostDto;
+import kr.pah.pcs.board.dto.DeleteDto;
 import kr.pah.pcs.board.exception.CustomException;
+import kr.pah.pcs.board.exception.ErrorCode;
 import kr.pah.pcs.board.repository.PostsQuerydslRepository;
 import kr.pah.pcs.board.repository.PostsRepository;
+import org.apache.catalina.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,10 +92,10 @@ class PostsServiceTest {
 
     @Test
     public void deletePost() throws Exception {
-        postsService.deletePost(1L);
-
-        assertThatThrownBy(() -> postsService.findPostById(1L))
+        Users user = new Users(552L, "name", "mail", Role.USER);
+        DeleteDto deleteDto = new DeleteDto(136L, user);
+        assertThatThrownBy(() -> postsService.deletePost(deleteDto))
                 .isInstanceOf(CustomException.class);
-     }
+    }
 
 }

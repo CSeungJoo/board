@@ -3,6 +3,7 @@ package kr.pah.pcs.board.controller;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import kr.pah.pcs.board.dto.CreatePostDto;
+import kr.pah.pcs.board.dto.DeleteDto;
 import kr.pah.pcs.board.dto.PostDto;
 import kr.pah.pcs.board.dto.PostsDto;
 import kr.pah.pcs.board.exception.CustomException;
@@ -46,8 +47,8 @@ public class PostController {
         return postsService.writePost(requestData);
     }
 
-    @GetMapping("/delete/{id}")
-    public String deletePost(@PathVariable("id") Long id) {
-        return postsService.deletePost(id);
+    @DeleteMapping("/delete")
+    public String deletePost(@RequestBody DeleteDto deleteDto) {
+        return postsService.deletePost(deleteDto);
     }
 }
