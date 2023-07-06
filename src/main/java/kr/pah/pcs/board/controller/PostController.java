@@ -2,10 +2,8 @@ package kr.pah.pcs.board.controller;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import kr.pah.pcs.board.dto.CreatePostDto;
-import kr.pah.pcs.board.dto.DeleteDto;
-import kr.pah.pcs.board.dto.PostDto;
-import kr.pah.pcs.board.dto.PostsDto;
+import kr.pah.pcs.board.domain.Posts;
+import kr.pah.pcs.board.dto.*;
 import kr.pah.pcs.board.exception.CustomException;
 import kr.pah.pcs.board.exception.ErrorCode;
 import kr.pah.pcs.board.repository.PostsQuerydslRepository;
@@ -47,8 +45,13 @@ public class PostController {
         return postsService.writePost(requestData);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/post/delete")
     public String deletePost(@RequestBody DeleteDto deleteDto) {
         return postsService.deletePost(deleteDto);
+    }
+
+    @PutMapping("/post/modified")
+    public String modified(@RequestBody ModifiedDto modifiedDto) {
+        return postsService.modified(modifiedDto);
     }
 }

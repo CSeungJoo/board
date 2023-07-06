@@ -2,20 +2,15 @@ package kr.pah.pcs.board.service;
 
 import jakarta.persistence.EntityManager;
 import kr.pah.pcs.board.domain.Posts;
-import kr.pah.pcs.board.domain.Users;
-import kr.pah.pcs.board.dto.CreatePostDto;
-import kr.pah.pcs.board.dto.DeleteDto;
-import kr.pah.pcs.board.dto.PostDto;
-import kr.pah.pcs.board.dto.PostsDto;
+import kr.pah.pcs.board.dto.*;
 import kr.pah.pcs.board.exception.CustomException;
 import kr.pah.pcs.board.exception.ErrorCode;
 import kr.pah.pcs.board.repository.PostsQuerydslRepository;
 import kr.pah.pcs.board.repository.PostsRepository;
+import kr.pah.pcs.board.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -26,6 +21,7 @@ public class PostsService {
 
     private final PostsRepository postsRepository;
     private final PostsQuerydslRepository postsQuerydslRepository;
+    private final UsersRepository usersRepository;
 
     public String writePost(CreatePostDto data) {
         if (data.getContent().isBlank() || data.getTitle().isBlank() || data.getUsers().getUsername().isBlank() || data.getUsers().getId() == null) throw new CustomException(ErrorCode.INVALID_POST_DATA);
@@ -42,9 +38,21 @@ public class PostsService {
     }
 
     public String deletePost(DeleteDto deleteDto) {
-        if (deleteDto.getUsers().equals(postsRepository.findById(deleteDto.getUsers().getId())))
+        if (deleteDto.getUsers().getId().equals(usersRepository.findById(deleteDto.getUsers().getId()).get().getId()))
         postsRepository.deleteById(deleteDto.getId());
         else throw new CustomException(ErrorCode.INVALID_DELETE_REQUEST);
+        return "ok";
+    }
+    public String modified(ModifiedDto modifiedDto) {
+        if (modifiedDto.getUsers().getId().equals(usersRepository.findById(modifiedDto.getUsers().getId()).get().getId())) {
+            Posts result = postsRepository.findById(modifiedDto.getId()).get();
+            result.setTitle(modifiedDto.getTitle());
+            result.setContent(modifiedDto.getContent());
+            postsRepository.save(result);
+            System.out.println("result = " + result);
+        }else {
+            throw new CustomException(ErrorCode.INVALID_POST_DATA);
+        }
         return "ok";
     }
 }
