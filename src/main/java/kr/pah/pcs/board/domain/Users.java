@@ -16,6 +16,8 @@ public class Users extends DefaultTime{
     private Long id;
     @Column(length = 13)
     private String username;
+
+    private String password;
     @Column(length = 30)
     private String email;
 
@@ -31,6 +33,14 @@ public class Users extends DefaultTime{
 
     public void changeName(String username) {
         this.username = username;
+    }
+
+    public Users(Long id, String username, String password, String email, Role role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
     }
 
     public Users(Long id, String username, String email, Role role) {
