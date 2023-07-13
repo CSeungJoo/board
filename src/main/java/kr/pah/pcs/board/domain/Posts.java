@@ -50,11 +50,8 @@ public class Posts extends DefaultTime{
         this.users = users;
     }
 
-    public void setTitle(String title) {
+    public void modified(String title, String content) {
         this.title = title;
-    }
-
-    public void setContent(String content) {
         this.content = content;
     }
 }

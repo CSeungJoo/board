@@ -46,8 +46,7 @@ public class PostsService {
     public String modified(ModifiedDto modifiedDto) {
         if (modifiedDto.getUsers().getId().equals(usersRepository.findById(modifiedDto.getUsers().getId()).get().getId())) {
             Posts result = postsRepository.findById(modifiedDto.getId()).get();
-            result.setTitle(modifiedDto.getTitle());
-            result.setContent(modifiedDto.getContent());
+            result.modified(modifiedDto.getTitle(), modifiedDto.getContent());
             postsRepository.save(result);
             System.out.println("result = " + result);
         }else {
