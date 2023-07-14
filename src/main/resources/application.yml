@@ -25,4 +25,4 @@ spring:
 logging.level:
   org.hibernate.sql: debug
 server:
-  port: 1005
+  port: 8081
