@@ -10,6 +10,7 @@ import kr.pah.pcs.board.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,5 +36,11 @@ public class UserController {
             session.setAttribute("user", user);
             return new ResponseEntity("ok", HttpStatus.OK);
         }else throw new CustomException(ErrorCode.INVALID_POST_DATA);
+    }
+
+    @GetMapping("logout")
+    public void logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) session.invalidate();
     }
 }
