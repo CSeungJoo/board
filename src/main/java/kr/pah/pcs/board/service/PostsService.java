@@ -38,17 +38,17 @@ public class PostsService {
     }
 
     public String deletePost(DeleteDto deleteDto) {
-        if (deleteDto.getUsers().getId().equals(usersRepository.findById(deleteDto.getUsers().getId()).get().getId()))
+        Long userId = deleteDto.getId();
+        if (userId.equals(usersRepository.findById(userId).get().getId()))
         postsRepository.deleteById(deleteDto.getId());
         else throw new CustomException(ErrorCode.INVALID_DELETE_REQUEST);
         return "ok";
     }
     public String modified(ModifiedDto modifiedDto) {
-        if (modifiedDto.getUsers().getId().equals(usersRepository.findById(modifiedDto.getUsers().getId()).get().getId())) {
-            Posts result = postsRepository.findById(modifiedDto.getId()).get();
+        Long userId = modifiedDto.getId();
+        if (userId.equals(usersRepository.findById(userId).get().getId())) {
+            Posts result = postsRepository.findById(userId).get();
             result.modified(modifiedDto.getTitle(), modifiedDto.getContent());
-            postsRepository.save(result);
-            System.out.println("result = " + result);
         }else {
             throw new CustomException(ErrorCode.INVALID_POST_DATA);
         }
