@@ -2,6 +2,7 @@ package kr.pah.pcs.board.controller;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.HttpServletRequest;
 import kr.pah.pcs.board.domain.Posts;
 import kr.pah.pcs.board.dto.*;
 import kr.pah.pcs.board.exception.CustomException;
@@ -41,17 +42,28 @@ public class PostController {
     }
 
     @PostMapping("/post/write")
-    public String writePost(@RequestBody CreatePostDto requestData) {
+    public String writePost(@RequestBody CreatePostDto requestData, HttpServletRequest request) {
+        request.getSession(false);
+        if(request.getAttribute("user") != null)
         return postsService.writePost(requestData);
+        else return "false";
     }
 
     @DeleteMapping("/post/delete")
-    public String deletePost(@RequestBody DeleteDto deleteDto) {
+    public String deletePost(@RequestBody DeleteDto deleteDto, HttpServletRequest request) {
+        request.getSession(false);
+        if(request.getAttribute("user") != null)
         return postsService.deletePost(deleteDto);
+        else return "false";
+
     }
 
     @PutMapping("/post/modified")
-    public String modified(@RequestBody ModifiedDto modifiedDto) {
+    public String modified(@RequestBody ModifiedDto modifiedDto, HttpServletRequest request) {
+        request.getSession(false);
+        if(request.getAttribute("user") != null)
         return postsService.modified(modifiedDto);
+        else return "false";
+
     }
 }
