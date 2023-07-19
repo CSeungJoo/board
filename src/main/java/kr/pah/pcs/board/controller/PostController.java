@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import kr.pah.pcs.board.domain.Posts;
+import kr.pah.pcs.board.domain.Users;
 import kr.pah.pcs.board.dto.*;
 import kr.pah.pcs.board.exception.CustomException;
 import kr.pah.pcs.board.exception.ErrorCode;
@@ -42,28 +43,30 @@ public class PostController {
     }
 
     @PostMapping("/post/write")
-    public String writePost(@RequestBody CreatePostDto requestData, HttpServletRequest request) {
+    public String writePost(@RequestBody CreatePostDto createPostDto, HttpServletRequest request) {
         request.getSession(false);
         if(request.getAttribute("user") != null)
-        return postsService.writePost(requestData);
-        else return "false";
+            return postsService.writePost(createPostDto);
+        else
+            throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
     }
 
     @DeleteMapping("/post/delete")
     public String deletePost(@RequestBody DeleteDto deleteDto, HttpServletRequest request) {
         request.getSession(false);
         if(request.getAttribute("user") != null)
-        return postsService.deletePost(deleteDto);
-        else return "false";
-
+            return postsService.deletePost(deleteDto, request);
+        else
+            throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
     }
 
     @PutMapping("/post/modified")
     public String modified(@RequestBody ModifiedDto modifiedDto, HttpServletRequest request) {
         request.getSession(false);
         if(request.getAttribute("user") != null)
-        return postsService.modified(modifiedDto);
-        else return "false";
+        return postsService.modified(modifiedDto, request);
+        else
+            throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
 
     }
 }

@@ -1,7 +1,9 @@
 package kr.pah.pcs.board.service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpServletRequest;
 import kr.pah.pcs.board.domain.Posts;
+import kr.pah.pcs.board.domain.Users;
 import kr.pah.pcs.board.dto.*;
 import kr.pah.pcs.board.exception.CustomException;
 import kr.pah.pcs.board.exception.ErrorCode;
@@ -24,7 +26,7 @@ public class PostsService {
     private final UsersRepository usersRepository;
 
     public String writePost(CreatePostDto data) {
-        if (data.getContent().isBlank() || data.getTitle().isBlank() || data.getUsers().getUsername().isBlank() || data.getUsers().getId() == null) throw new CustomException(ErrorCode.INVALID_POST_DATA);
+        if (data.getContent().isBlank() || data.getTitle().isBlank() || data.getUsers() == null || data.getUsers().getId() == null) throw new CustomException(ErrorCode.INVALID_POST_DATA);
         Posts post = new Posts(data.getTitle(), data.getContent(), data.getUsers());
         postsRepository.save(post);
         return "ok";
@@ -37,21 +39,21 @@ public class PostsService {
         return result;
     }
 
-    public String deletePost(DeleteDto deleteDto) {
-        Long userId = deleteDto.getId();
-        if (userId.equals(usersRepository.findById(userId).get().getId()))
+    public String deletePost(DeleteDto deleteDto, HttpServletRequest request) {
+        Users users = deleteDto.getUsers();
+        if (users.equals(request.getAttribute("user")))
         postsRepository.deleteById(deleteDto.getId());
         else throw new CustomException(ErrorCode.INVALID_DELETE_REQUEST);
         return "ok";
     }
-    public String modified(ModifiedDto modifiedDto) {
-        Long userId = modifiedDto.getId();
-        if (userId.equals(usersRepository.findById(userId).get().getId())) {
-            Posts result = postsRepository.findById(userId).get();
+    public String modified(ModifiedDto modifiedDto, HttpServletRequest request) {
+        Long posts = modifiedDto.getId();
+        if (modifiedDto.getUsers().equals(request.getAttribute("user"))) {
+            Posts result = postsRepository.findById(modifiedDto.getId()).get();
             result.modified(modifiedDto.getTitle(), modifiedDto.getContent());
-        }else {
-            throw new CustomException(ErrorCode.INVALID_POST_DATA);
         }
+        else
+            throw new CustomException(ErrorCode.INVALID_POST_DATA);
         return "ok";
     }
 }
