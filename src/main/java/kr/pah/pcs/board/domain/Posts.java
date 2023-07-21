@@ -1,6 +1,7 @@
 package kr.pah.pcs.board.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,7 @@ public class Posts extends DefaultTime{
     @Column(nullable = false)
     private int view;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "posts")
     private List<Comment> comment;
 

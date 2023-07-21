@@ -5,4 +5,6 @@ import kr.pah.pcs.board.dto.PostsDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostsRepository extends JpaRepository<Posts, Long> {
+
+    Posts findPostsById(Long id);
 }

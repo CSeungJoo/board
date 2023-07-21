@@ -3,6 +3,7 @@ package kr.pah.pcs.board.controller;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import kr.pah.pcs.board.domain.Posts;
 import kr.pah.pcs.board.domain.Users;
 import kr.pah.pcs.board.dto.*;
@@ -15,6 +16,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,8 +47,8 @@ public class PostController {
 
     @PostMapping("/post/write")
     public String writePost(@RequestBody CreatePostDto createPostDto, HttpServletRequest request) {
-        request.getSession(false);
-        if(request.getAttribute("user") != null)
+        HttpSession session = request.getSession(false);
+        if(session.getAttribute("user") != null)
             return postsService.writePost(createPostDto);
         else
             throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
@@ -53,8 +56,8 @@ public class PostController {
 
     @DeleteMapping("/post/delete")
     public String deletePost(@RequestBody DeleteDto deleteDto, HttpServletRequest request) {
-        request.getSession(false);
-        if(request.getAttribute("user") != null)
+        HttpSession session = request.getSession(false);
+        if(session.getAttribute("user") != null)
             return postsService.deletePost(deleteDto, request);
         else
             throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
@@ -62,11 +65,19 @@ public class PostController {
 
     @PutMapping("/post/modified")
     public String modified(@RequestBody ModifiedDto modifiedDto, HttpServletRequest request) {
-        request.getSession(false);
-        if(request.getAttribute("user") != null)
+        HttpSession session = request.getSession(false);
+        if(session.getAttribute("user") != null)
         return postsService.modified(modifiedDto, request);
         else
             throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
+    }
 
+    @PostMapping("/comment")
+    public ResponseEntity writeComment(@RequestBody WriteCommentDto writeCommentDto, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session.getAttribute("user") != null)
+            return postsService.writeComment(writeCommentDto, request);
+        else
+            throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
     }
 }

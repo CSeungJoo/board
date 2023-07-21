@@ -8,8 +8,7 @@ public class ModifiedDto {
     private Long id;
     private String title;
     private String content;
-    private Users users
-            ;
+    private Users users;
 
     public ModifiedDto(Long id, String title, String content, Users users) {
         this.id = id;

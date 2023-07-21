@@ -29,3 +29,6 @@ server:
   servlet:
     session:
       timeout: 1200
+logging:
+  level:
+    root: info

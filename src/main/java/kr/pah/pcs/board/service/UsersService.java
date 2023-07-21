@@ -3,6 +3,7 @@ package kr.pah.pcs.board.service;
 import com.querydsl.core.Tuple;
 import kr.pah.pcs.board.domain.Role;
 import kr.pah.pcs.board.domain.Users;
+import kr.pah.pcs.board.dto.LoginDto;
 import kr.pah.pcs.board.dto.SignUserDto;
 import kr.pah.pcs.board.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,10 @@ public class UsersService {
         log.info(signUserDto.getUsername());
         Users user = new Users(null, signUserDto.getUsername(), signUserDto.getPassword(), signUserDto.getEmail(), Role.USER);
         usersRepository.save(user);
-        return new ResponseEntity("ok" , HttpStatus.OK);
+        return new ResponseEntity("정상적으로 회원가입되었습니다." , HttpStatus.OK);
     }
 
-    public List<Users> login(String username, String password) {
-        return usersRepository.findByUsernameAndPassword(username, password);
+    public Users login(LoginDto loginDto) {
+        return usersRepository.findByUsernameAndPassword(loginDto.getUsername(), loginDto.getUsername());
     }
 }
