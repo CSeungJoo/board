@@ -4,11 +4,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kr.pah.pcs.board.domain.Comment;
 import kr.pah.pcs.board.domain.Posts;
 import kr.pah.pcs.board.domain.Users;
 import kr.pah.pcs.board.dto.*;
 import kr.pah.pcs.board.exception.CustomException;
 import kr.pah.pcs.board.exception.ErrorCode;
+import kr.pah.pcs.board.repository.CommentQuerydslRepository;
 import kr.pah.pcs.board.repository.PostsQuerydslRepository;
 import kr.pah.pcs.board.repository.PostsRepository;
 import kr.pah.pcs.board.service.PostsService;
@@ -31,6 +33,7 @@ public class PostController {
     private final PostsRepository postsRepository;
     private final PostsService postsService;
     private final PostsQuerydslRepository postsQuerydslRepository;
+    private final CommentQuerydslRepository commentQuerydslRepository;
 
 //    게시글 페이징 조회
     @GetMapping("/posts")
@@ -79,5 +82,10 @@ public class PostController {
             return postsService.writeComment(writeCommentDto, request);
         else
             throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
+    }
+
+    @GetMapping("/comment")
+    public List<Comment> getComment(@PageableDefault Pageable pageable) {
+        return commentQuerydslRepository.findAll(pageable);
     }
 }
