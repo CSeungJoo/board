@@ -27,11 +27,9 @@ public class Users extends DefaultTime{
     private Role role;
 
     @OneToMany(mappedBy = "users")
-    @JsonIgnore
     private List<Posts> posts;
 
     @OneToMany(mappedBy = "users")
-    @JsonIgnore
     private List<Comment> comments;
 
     public void changeName(String username) {

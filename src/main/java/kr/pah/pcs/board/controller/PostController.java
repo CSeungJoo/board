@@ -85,7 +85,7 @@ public class PostController {
     }
 
     @GetMapping("/comment")
-    public List<Comment> getComment(@PageableDefault Pageable pageable) {
+    public List<GetCommentDto> getComment(@PageableDefault Pageable pageable) {
         return commentQuerydslRepository.findAll(pageable);
     }
 }

@@ -4,10 +4,16 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import kr.pah.pcs.board.domain.Comment;
 import kr.pah.pcs.board.domain.QComment;
+import kr.pah.pcs.board.domain.QUsers;
+import kr.pah.pcs.board.dto.GetCommentDto;
+import kr.pah.pcs.board.dto.QGetCommentDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static kr.pah.pcs.board.domain.QComment.comment1;
+import static kr.pah.pcs.board.domain.QUsers.users;
 
 @Repository
 public class CommentQuerydslRepository {
@@ -20,11 +26,19 @@ public class CommentQuerydslRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<Comment> findAll(Pageable pageable) {
+    public List<GetCommentDto> findAll(Pageable pageable) {
         return queryFactory
-                .selectFrom(QComment.comment1)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .select(new QGetCommentDto(
+                        comment1.id,
+                        comment1.comment,
+                        comment1.users.username,
+                        comment1.users.role,
+                        comment1.modifiedDate
+                ))
+                .offset(0)
+                .limit(10)
+                .from(comment1)
+                .join(comment1.users, users)
                 .fetch();
     }
 

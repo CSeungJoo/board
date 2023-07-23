@@ -70,8 +70,9 @@ public class PostsService {
     }
 
     public ResponseEntity writeComment(WriteCommentDto writeCommentDto, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         Posts post = postsRepository.findPostsById(writeCommentDto.getPost_id());
-        Users user = usersRepository.findUsersById((Long) request.getAttribute("user"));
+        Users user = usersRepository.findUsersById((Long) session.getAttribute("user"));
         commentRepository.save(new Comment(null, writeCommentDto.getComment(), post, user));
         return new ResponseEntity("정상적으로 댓글이 작성되었습니다.", HttpStatus.OK);
     }
