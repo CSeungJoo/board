@@ -32,8 +32,11 @@ public class Users extends DefaultTime{
     @OneToMany(mappedBy = "users")
     private List<Comment> comments;
 
-    public void changeName(String username) {
+    public void modified(String username, String password, String email) {
         this.username = username;
+        this.password = password;
+        this.email = email;
+
     }
 
     public Users(Long id, String username, String password, String email, Role role) {

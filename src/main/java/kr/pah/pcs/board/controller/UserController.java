@@ -4,17 +4,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kr.pah.pcs.board.domain.Users;
 import kr.pah.pcs.board.dto.LoginDto;
+import kr.pah.pcs.board.dto.ModifiedUserDto;
 import kr.pah.pcs.board.dto.SignUserDto;
 import kr.pah.pcs.board.exception.CustomException;
 import kr.pah.pcs.board.exception.ErrorCode;
+import kr.pah.pcs.board.repository.PostsRepository;
+import kr.pah.pcs.board.repository.UsersRepository;
 import kr.pah.pcs.board.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ import java.util.List;
 public class UserController {
 
     private final UsersService usersService;
+    private final UsersRepository usersRepository;
 
     @PostMapping("/sign")
     public ResponseEntity sign(@RequestBody SignUserDto signUserDto) {
@@ -39,9 +41,17 @@ public class UserController {
         }else throw new CustomException(ErrorCode.INVALID_POST_DATA);
     }
 
-    @GetMapping("logout")
+    @GetMapping("/logout")
     public void logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) session.invalidate();
+    }
+
+    @PutMapping("/user/modified")
+    @Transactional
+    public void modified(@RequestBody ModifiedUserDto modifiedUserDto, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Users user = usersRepository.findUsersById((Long) session.getAttribute("user"));
+        user.modified(modifiedUserDto.getUsername(), modifiedUserDto.getPassword(), modifiedUserDto.getEmail());
     }
 }
