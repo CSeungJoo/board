@@ -84,8 +84,26 @@ public class PostController {
             throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
     }
 
-    @GetMapping("/comment")
-    public List<GetCommentDto> getComment(@PageableDefault Pageable pageable) {
-        return commentQuerydslRepository.findAll(pageable);
+    @GetMapping("/comment/{id}")
+    public List<GetCommentDto> getComment(@PathVariable("id") Long id ,@PageableDefault Pageable pageable) {
+        return commentQuerydslRepository.findAllByPost(id, pageable);
+    }
+
+    @PostMapping("/comment/modified")
+    public ResponseEntity modifiedComment(@RequestBody ModifiedCommentDto modifiedCommentDto, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if(session.getAttribute("user") != null)
+            return postsService.modifiedComment(modifiedCommentDto, request);
+        else
+            throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
+    }
+
+    @DeleteMapping("comment/delete")
+    public ResponseEntity deleteComment(@RequestBody Long id ,HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session.getAttribute("user") != null)
+            return postsService.deleteComment(id, request);
+        else
+            throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
     }
 }

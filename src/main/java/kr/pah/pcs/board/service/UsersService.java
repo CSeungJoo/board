@@ -25,10 +25,12 @@ public class UsersService {
     private final UsersRepository usersRepository;
 
     public ResponseEntity sign(SignUserDto signUserDto) {
-        log.info(signUserDto.getUsername());
-        Users user = new Users(null, signUserDto.getUsername(), signUserDto.getPassword(), signUserDto.getEmail(), Role.USER);
-        usersRepository.save(user);
-        return new ResponseEntity("정상적으로 회원가입되었습니다." , HttpStatus.OK);
+        if(usersRepository.findByUsername(signUserDto.getUsername()) != null) {
+            Users user = new Users(null, signUserDto.getUsername(), signUserDto.getPassword(), signUserDto.getEmail(), Role.USER);
+            usersRepository.save(user);
+            return new ResponseEntity("정상적으로 회원가입되었습니다." , HttpStatus.OK);
+        }else
+            return new ResponseEntity("이미 존재하는 회원입니다.", HttpStatus.OK);
     }
 
     public Users login(LoginDto loginDto) {

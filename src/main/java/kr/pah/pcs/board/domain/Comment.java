@@ -23,4 +23,8 @@ public class Comment extends DefaultTime{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
     private Users users;
+
+    public void changeComment(String comment) {
+        this.comment = comment;
+    }
 }

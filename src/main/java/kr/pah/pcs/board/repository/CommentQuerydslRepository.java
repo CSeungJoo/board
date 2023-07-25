@@ -8,6 +8,7 @@ import kr.pah.pcs.board.domain.QUsers;
 import kr.pah.pcs.board.dto.GetCommentDto;
 import kr.pah.pcs.board.dto.QGetCommentDto;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class CommentQuerydslRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<GetCommentDto> findAll(Pageable pageable) {
+    public List<GetCommentDto> findAllByPost(Long id ,Pageable pageable) {
         return queryFactory
                 .select(new QGetCommentDto(
                         comment1.id,
@@ -39,7 +40,14 @@ public class CommentQuerydslRepository {
                 .limit(10)
                 .from(comment1)
                 .join(comment1.users, users)
+                .where(comment1.posts.id.eq(id))
                 .fetch();
     }
 
+    public Comment findCommentById(Long id) {
+        return queryFactory
+                .selectFrom(comment1)
+                .where(comment1.id.eq(id))
+                .fetchOne();
+    }
 }
