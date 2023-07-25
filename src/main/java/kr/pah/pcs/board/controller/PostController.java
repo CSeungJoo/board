@@ -89,7 +89,7 @@ public class PostController {
         return commentQuerydslRepository.findAllByPost(id, pageable);
     }
 
-    @PostMapping("/comment/modified")
+    @PutMapping("/comment/modified")
     public ResponseEntity modifiedComment(@RequestBody ModifiedCommentDto modifiedCommentDto, HttpServletRequest request) {
         HttpSession session = request.getSession();
         if(session.getAttribute("user") != null)
