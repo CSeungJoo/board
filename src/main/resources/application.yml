@@ -1,20 +1,11 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/board;MODE=LEGACY
-    username: sa
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/board?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true
+    username: root
     password:
-    driver-class-name: org.h2.Driver
-  h2:
-    console:
-      enabled: true
-      settings:
-        web-allow-others: true
-
-  #    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/{schema}createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true
-
   jpa:
-    database: h2
+    database: mysql
     show-sql: true
     hibernate:
       ddl-auto: update
@@ -25,7 +16,7 @@ spring:
 logging.level:
   org.hibernate.sql: debug
 server:
-  port: 8081
+  port: 8080
   servlet:
     session:
       timeout: 1200
