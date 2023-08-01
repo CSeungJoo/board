@@ -76,7 +76,7 @@ public class PostController {
             throw new CustomException(ErrorCode.INVALID_SESSION_DATA);
     }
 
-    @PostMapping("/comment")
+    @PostMapping("/comment/write")
     public ResponseEntity writeComment(@RequestBody WriteCommentDto writeCommentDto, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session.getAttribute("user") != null)
