@@ -26,6 +26,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:80")
 public class PostController {
 
     private final EntityManager em;
