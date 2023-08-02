@@ -55,4 +55,11 @@ public class UserController {
         Users user = usersRepository.findUsersById((Long) session.getAttribute("user"));
         user.modified(modifiedUserDto.getUsername(), modifiedUserDto.getPassword(), modifiedUserDto.getEmail());
     }
+
+    @GetMapping("/user")
+    public Users user(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Users user = usersRepository.findUsersById((Long)session.getAttribute("user"));
+        return new Users(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
+    }
 }
