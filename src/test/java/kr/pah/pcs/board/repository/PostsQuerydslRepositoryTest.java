@@ -6,24 +6,17 @@ import kr.pah.pcs.board.domain.Posts;
 import kr.pah.pcs.board.domain.Role;
 import kr.pah.pcs.board.domain.Users;
 import kr.pah.pcs.board.dto.PostDto;
-import kr.pah.pcs.board.dto.PostsDto;
-import org.apache.catalina.User;
-import org.aspectj.lang.annotation.Before;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

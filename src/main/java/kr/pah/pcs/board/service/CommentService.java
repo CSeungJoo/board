@@ -1,34 +1,22 @@
 package kr.pah.pcs.board.service;
 
-import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kr.pah.pcs.board.domain.Comment;
 import kr.pah.pcs.board.domain.Posts;
 import kr.pah.pcs.board.domain.Users;
-import kr.pah.pcs.board.dto.*;
+import kr.pah.pcs.board.dto.CommentDto;
 import kr.pah.pcs.board.exception.CustomException;
 import kr.pah.pcs.board.exception.ErrorCode;
 import kr.pah.pcs.board.repository.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
-@Slf4j
-public class PostsService {
-
-    private final EntityManager em;
+public class CommentService {
 
     private final PostsRepository postsRepository;
     private final PostsQuerydslRepository postsQuerydslRepository;
@@ -36,39 +24,6 @@ public class PostsService {
     private final UsersRepository usersRepository;
     private final CommentQuerydslRepository commentQuerydslRepository;
 
-    public ResponseEntity writePost(PostDto.CreatePostDto data) {
-        if (data.getContent().isBlank() || data.getTitle().isBlank() || data.getUsers() == null || data.getUsers().getId() == null) throw new CustomException(ErrorCode.INVALID_POST_DATA);
-        Posts post = new Posts(data.getTitle(), data.getContent(), data.getUsers());
-        postsRepository.save(post);
-        return new ResponseEntity("성공적으로 작성되었습니다.", HttpStatus.OK);
-    }
-
-    public PostDto.GetPostDto findPostById(Long id) {
-        PostDto.GetPostDto result = postsQuerydslRepository.findPostById(id);
-        if(result == null) throw new CustomException(ErrorCode.POST_NOT_FOUND);
-        result.setView(result.getView() + 1);
-        return result;
-    }
-
-    public ResponseEntity deletePost(PostDto.DeleteDto deleteDto, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Long users = deleteDto.getUsers().getId();
-        if (users.equals(session.getAttribute("user")))
-        postsRepository.deleteById(deleteDto.getId());
-        else throw new CustomException(ErrorCode.INVALID_DELETE_REQUEST);
-        return new ResponseEntity("성공적으로 삭제되었습니다.", HttpStatus.OK);
-    }
-    public ResponseEntity modified(PostDto.ModifiedPostDto modifiedDto, HttpServletRequest request) {
-        Long posts = modifiedDto.getUsers().getId();
-        HttpSession session = request.getSession(false);
-        if (posts.equals(session.getAttribute("user"))) {
-            Posts result = postsRepository.findById(modifiedDto.getId()).get();
-            result.modified(modifiedDto.getTitle(), modifiedDto.getContent());
-        }
-        else
-            throw new CustomException(ErrorCode.INVALID_POST_DATA);
-        return new ResponseEntity("성공적으로 수정되었습니다.", HttpStatus.OK);
-    }
 
     public ResponseEntity writeComment(CommentDto.WriteCommentDto writeCommentDto, HttpServletRequest request) {
         HttpSession session = request.getSession();

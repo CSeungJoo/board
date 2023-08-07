@@ -2,32 +2,15 @@ package kr.pah.pcs.board.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.servlet.http.HttpServletRequest;
-import kr.pah.pcs.board.domain.Posts;
 import kr.pah.pcs.board.domain.Role;
 import kr.pah.pcs.board.domain.Users;
-import kr.pah.pcs.board.dto.CreatePostDto;
-import kr.pah.pcs.board.dto.DeleteDto;
-import kr.pah.pcs.board.dto.ModifiedDto;
-import kr.pah.pcs.board.exception.CustomException;
-import kr.pah.pcs.board.exception.ErrorCode;
 import kr.pah.pcs.board.repository.PostsQuerydslRepository;
 import kr.pah.pcs.board.repository.PostsRepository;
-import org.apache.catalina.User;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PostsServiceTest {

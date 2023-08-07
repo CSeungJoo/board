@@ -4,14 +4,12 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import kr.pah.pcs.board.dto.*;
-import kr.pah.pcs.board.exception.CustomException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import static kr.pah.pcs.board.domain.QPosts.posts;
 import static kr.pah.pcs.board.domain.QUsers.*;
@@ -32,9 +30,9 @@ public class PostsQuerydslRepository {
      * DTO를 통하여 조회하기
      * @return
      */
-    public List<PostsDto> findAll() throws IOException {
+    public List<PostDto.GetPostsDto> findAll() throws IOException {
         return queryFactory
-                .select(new QPostsDto(
+                .select(new QPostDto_GetPostsDto(
                         posts.id.as("posts_id"),
                         posts.title,
                         users.username,
@@ -51,9 +49,9 @@ public class PostsQuerydslRepository {
      * DTO를 통하여 페이징 조회
      * @return
      */
-    public List<PostsDto> findAll(Pageable pageable) {
+    public List<PostDto.GetPostsDto> findAll(Pageable pageable) {
         return queryFactory
-                .select(new QPostsDto(
+                .select(new QPostDto_GetPostsDto(
                         posts.id.as("posts_id"),
                         posts.title,
                         users.username,
@@ -67,9 +65,11 @@ public class PostsQuerydslRepository {
                 .fetch();
     }
 
-    public List<PostsDto> findAllByTitle(String title, Pageable pageable) {
+
+
+    public List<PostDto.GetPostsDto> findAllByTitle(String title, Pageable pageable) {
         return queryFactory
-                .select(new QPostsDto(
+                .select(new QPostDto_GetPostsDto(
                         posts.id.as("posts_id"),
                         posts.title,
                         users.username,
@@ -84,9 +84,9 @@ public class PostsQuerydslRepository {
                 .fetch();
     }
 
-    public PostDto findPostById(Long id) {
+    public PostDto.GetPostDto findPostById(Long id) {
         return queryFactory
-                .select(new QPostDto(
+                .select(new QPostDto_GetPostDto(
                         posts.title,
                         posts.content,
                         users.username,
