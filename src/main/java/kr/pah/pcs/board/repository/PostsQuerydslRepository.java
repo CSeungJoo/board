@@ -67,6 +67,23 @@ public class PostsQuerydslRepository {
                 .fetch();
     }
 
+    public List<PostsDto> findAllByTitle(String title, Pageable pageable) {
+        return queryFactory
+                .select(new QPostsDto(
+                        posts.id.as("posts_id"),
+                        posts.title,
+                        users.username,
+                        posts.view,
+                        posts.createdDate
+                ))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .from(posts)
+                .join(posts.users, users)
+                .where(posts.title.like(title))
+                .fetch();
+    }
+
     public PostDto findPostById(Long id) {
         return queryFactory
                 .select(new QPostDto(

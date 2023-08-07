@@ -36,8 +36,8 @@ public class CommentQuerydslRepository {
                         comment1.users.role,
                         comment1.modifiedDate
                 ))
-                .offset(0)
-                .limit(10)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .from(comment1)
                 .join(comment1.users, users)
                 .where(comment1.posts.id.eq(id))

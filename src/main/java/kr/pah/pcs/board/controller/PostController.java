@@ -1,27 +1,16 @@
 package kr.pah.pcs.board.controller;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import kr.pah.pcs.board.domain.Comment;
-import kr.pah.pcs.board.domain.Posts;
-import kr.pah.pcs.board.domain.Users;
+import jakarta.servlet.http.*;
 import kr.pah.pcs.board.dto.*;
-import kr.pah.pcs.board.exception.CustomException;
-import kr.pah.pcs.board.exception.ErrorCode;
+import kr.pah.pcs.board.exception.*;
 import kr.pah.pcs.board.repository.CommentQuerydslRepository;
 import kr.pah.pcs.board.repository.PostsQuerydslRepository;
-import kr.pah.pcs.board.repository.PostsRepository;
 import kr.pah.pcs.board.service.PostsService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -29,24 +18,24 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:80")
 public class PostController {
 
-    private final EntityManager em;
-
-    private final PostsRepository postsRepository;
     private final PostsService postsService;
     private final PostsQuerydslRepository postsQuerydslRepository;
     private final CommentQuerydslRepository commentQuerydslRepository;
 
 //    게시글 페이징 조회
     @GetMapping("/posts")
-    public List<PostsDto> getPosts(@PageableDefault Pageable pageable) {
-        return postsQuerydslRepository.findAll(pageable);
+    public List<PostsDto> getPosts(@RequestParam(required = false) String title,@PageableDefault Pageable pageable) {
+        if (title != null) {
+            return postsQuerydslRepository.findAll(pageable);
+        }else {
+            return postsQuerydslRepository.findAllByTitle(title, pageable);
+        }
     }
 
 //    게시글 보기
     @GetMapping("/post/{id}")
     public PostDto post(@PathVariable("id") Long id) {
-        PostDto result = postsService.findPostById(id);
-        return result;
+        return postsService.findPostById(id);
     }
 
     @PostMapping("/post/write")
